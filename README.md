@@ -1,190 +1,622 @@
-Modelado matemático para la predicción de temperatura del aire a corto plazo en el sector del Parque Bicentenario, Quito
-Proyecto universitario — Métodos Numéricos  
-Escuela Politécnica Nacional (EPN) · Facultad de Ingeniería de Sistemas  
-Área de estudio: sector del Parque Bicentenario, parroquia La Concepción, norte de Quito, Ecuador  
-Horizontes de predicción: 1, 3 y 5 horas  
-Estado: proyecto en desarrollo
+
+# 🌤️ Modelado matemático para la predicción de temperatura del aire a corto plazo en el sector del Parque Bicentenario, Quito
+
+**Proyecto universitario — Métodos Numéricos**
+
+**Escuela Politécnica Nacional (EPN)**  
+**Facultad de Ingeniería de Sistemas**
+
+**Área de estudio:** Parque Bicentenario, parroquia La Concepción, norte de Quito, Ecuador.
+
+**Horizontes de predicción:** 1, 3 y 5 horas.
+
+**Estado:** Proyecto en desarrollo.
+
 ---
-Contenido
-Descripción
-¿Por qué es un buen tema de investigación?
-Objetivos
-Área de estudio y delimitación geográfica
-Fuentes de datos
-Variables meteorológicas
-Metodología propuesta
-Fundamento matemático
-Evaluación del modelo y representatividad
-Tecnologías y ejecución
-Resultados
-Limitaciones
-Equipo
-Referencias
-📌 Descripción
-Este proyecto busca desarrollar una función matemática para estimar la temperatura del aire a 1, 3 y 5 horas en el entorno de referencia del Parque Bicentenario, ubicado en la parroquia La Concepción, al norte de Quito.
-El estudio utiliza una serie meteorológica horaria del período 2018–2026 asociada a la estación histórica Quito / Mariscal Sucre de Meteostat. Según la preparación de datos del equipo, los registros faltantes se complementan con información de ERA5 y ECMWF IFS, consultada mediante Open-Meteo. El intervalo exacto de fechas, la cantidad de registros y la proporción de datos completados deberán documentarse al finalizar la depuración.
-La técnica matemática central será el ajuste por mínimos cuadrados, con el que se buscará relacionar las variables meteorológicas disponibles con la temperatura futura. El propósito es evaluar la capacidad de predicción a corto plazo en la ubicación de referencia, no generar un pronóstico válido para toda la ciudad de Quito.
-💡 ¿Por qué es un buen tema de investigación?
-Este proyecto es relevante por cuatro razones:
-Aplicación de Métodos Numéricos a un caso real. Los mínimos cuadrados permiten construir y evaluar una función matemática utilizando datos observados, en lugar de trabajar únicamente con ejemplos teóricos.
-Interés local. Se estudia una zona reconocible del norte de Quito, cercana al antiguo aeropuerto Mariscal Sucre, hoy transformado en el Parque Bicentenario.
-Diversidad de superficies. En el parque y sus alrededores existen espacios verdes, vías y sectores construidos. Estos ambientes pueden tener comportamientos térmicos distintos. Una investigación del Centro de Información Urbana de Quito (CIUQ, 2020) examinó diferencias espaciales de temperatura superficial en varias zonas de Quito, incluida Bicentenario. La temperatura superficial no debe confundirse con la temperatura del aire.
-Oportunidad de evaluar los límites de los datos. El trabajo permite estudiar si una predicción obtenida con una serie de referencia puede extenderse a áreas próximas o si se necesitan observaciones adicionales.
-La elección del sector es pertinente para investigar; esto no significa que toda la parroquia La Concepción esté ya validada como zona de predicción.
-Objetivos
-Objetivo general
-Desarrollar y evaluar un modelo matemático basado en mínimos cuadrados para estimar la temperatura del aire a 1, 3 y 5 horas en la ubicación meteorológica de referencia del sector del Parque Bicentenario, norte de Quito.
-Objetivos específicos
-Reunir, revisar y organizar registros meteorológicos horarios del período 2018–2026.
-Identificar datos faltantes y documentar los valores complementados mediante productos meteorológicos de Open-Meteo.
-Seleccionar variables explicativas y construir funciones de predicción mediante mínimos cuadrados.
-Evaluar el desempeño para cada horizonte temporal mediante métricas de error.
-Examinar las condiciones geográficas y las limitaciones de representatividad espacial de la serie utilizada.
-Presentar los resultados mediante tablas, gráficas y conclusiones reproducibles.
-📍 Área de estudio y delimitación geográfica
-Ubicación de referencia
-Característica	Información
-Ciudad	Quito, Ecuador
-Parroquia de referencia	La Concepción
-Sector central del estudio	Parque Bicentenario
-Estación histórica asociada	Quito / Mariscal Sucre
-Identificador Meteostat / WMO	`84071`
-Identificador ICAO histórico	`SEQU`
-Latitud de referencia	`-0.1500`
-Longitud de referencia	`-78.4833`
-Elevación registrada por Meteostat	`2811 m s. n. m.`
-Mapa de consulta: Google Maps: coordenadas de referencia.
-> **Aclaración:** las coordenadas identifican la referencia histórica utilizada por Meteostat; por sí solas no prueban que exista un sensor físico operativo actualmente en ese punto, ni que todas las observaciones de 2018–2026 sean mediciones directas del antiguo aeropuerto. Se debe verificar la procedencia y el tipo de cada registro.
-La Empresa Pública Metropolitana de Movilidad y Obras Públicas (EPMMOP) señala que el Parque Bicentenario ocupa terrenos del antiguo aeropuerto de Quito y contiene áreas recreativas y vegetación. Un documento técnico municipal de 2025 identifica el predio en la parroquia Concepción, sector Aeropuerto, y describe un relieve mayoritariamente plano, con un declive del orden del 0,5 % al 1 % en el terreno estudiado. Esto no describe necesariamente todas las pendientes de la parroquia.
-¿Cuáles son los límites del estudio?
-Es importante diferenciar tres áreas:
-Área	Alcance que podemos sostener actualmente
-Referencia meteorológica	Serie de datos asociada a las coordenadas y al identificador de la estación histórica Mariscal Sucre.
-Sector propuesto para investigar	Parque Bicentenario y sectores próximos de La Concepción. Se deben analizar elevación, relieve, vegetación y urbanización antes de proponer una extensión.
-Área validada para aplicar el modelo	Todavía no delimitada: hacen falta comparaciones con observaciones independientes en otros puntos.
-Los límites administrativos de La Concepción o los límites físicos del parque son útiles para describir el lugar, pero no son automáticamente límites meteorológicos. Tampoco se adopta un radio fijo alrededor de la estación.
-Para evaluar posibles extensiones se propone revisar sectores cercanos con condiciones comparables y tratar con especial precaución las laderas y zonas con cambios marcados de uso del suelo. No se afirma todavía que esos sectores tengan temperaturas equivalentes.
-La Organización Meteorológica Mundial (OMM/WMO) indica que la representatividad de una observación depende de la variable, el entorno, la exposición del instrumento y el uso previsto. Por eso, la delimitación se tratará como una cuestión a verificar, no como un supuesto.
-Propuesta viable de delimitación
-Alcance inicial defendible: predicción de temperatura del aire en la ubicación meteorológica de referencia. El entorno del Parque Bicentenario y La Concepción constituye el contexto geográfico y área candidata de evaluación, no una superficie de cobertura ya certificada.
-Si se dispone de observaciones horarias simultáneas en una o más estaciones próximas, se compararán sus temperaturas para comprobar si hay evidencia que permita ampliar prudentemente el alcance. Si no hay datos suficientes, el informe mantendrá la delimitación puntual y lo explicará como limitación.
-🗂️ Fuentes de datos
-Meteostat — estación histórica Quito / Mariscal Sucre
-Ficha de la estación: https://meteostat.net/es/station/84071
-Referencia espacial: `-0.1500, -78.4833`.
-Datos asociados: serie meteorológica horaria seleccionada por el equipo.
-Precaución: se debe distinguir entre observaciones instrumentales, registros históricos disponibles y posibles datos derivados o interpolados. El inventario de una plataforma no verifica por sí solo que el sensor histórico continúe funcionando.
-Open-Meteo — productos para complementar faltantes
-Documentación: https://open-meteo.com/en/docs/historical-weather-api
-Producto	Resolución espacial nominal indicada por Open-Meteo	Nota
-ERA5	`0,25°`, aproximadamente `25 km`	Reanálisis atmosférico; no equivale a representar cada calle o barrio.
-ECMWF IFS histórico	Aproximadamente `9 km`	Producto basado en un modelo atmosférico; su configuración puede cambiar entre versiones.
-La elección de una celda de malla y los ajustes topográficos aplicados por el proveedor deben documentarse. Una resolución de 25 km no equivale a un radio de predicción confiable de 25 km; del mismo modo, los 9 km de IFS no representan la cobertura validada de nuestro modelo de mínimos cuadrados.
-Trazabilidad de datos
-En el conjunto final se recomienda conservar, como mínimo:
-Fecha y hora, con zona horaria identificada.
-Valor de cada variable y unidad de medida.
-Fuente del valor: observación original, ERA5 o IFS.
-Indicador de registro faltante o completado.
-Reglas de limpieza, ajustes y selección de registros.
-No se debe presentar un valor reconstruido mediante reanálisis como si fuera una lectura directa de un sensor.
-🌡️ Variables meteorológicas
-Las variables consideradas por el proyecto son:
-Variable	Uso previsto
-Temperatura del aire	Variable objetivo del modelo.
-Humedad relativa	Posible variable explicativa.
-Velocidad del viento	Posible variable explicativa.
-Dirección del viento	Posible variable explicativa; requiere codificación adecuada por su carácter circular.
-Presión atmosférica	Posible variable explicativa.
-Nubosidad	Posible variable explicativa.
-Precipitación	Posible variable explicativa.
-Hora y fecha	Permiten explorar patrones horarios y temporales sin introducir datos futuros.
-La lista definitiva de predictores se decidirá durante la implementación. Las unidades, nombres de columnas y disponibilidad efectiva se documentarán usando el dataset final.
-🔎 Metodología propuesta
-Obtención: recopilar la serie horaria de referencia y registrar su origen.
-Revisión: comprobar continuidad temporal, duplicados, unidades, valores ausentes y posibles inconsistencias.
-Complementación: aplicar la estrategia de completado definida por el equipo y conservar una marca del origen de cada registro.
-Preparación: construir variables explicativas a partir de datos disponibles en el instante de emisión de cada predicción.
-Ajuste: calcular coeficientes de una función matemática mediante mínimos cuadrados.
-Predicción: obtener estimaciones de la temperatura para los horizontes de 1, 3 y 5 horas.
-Evaluación: usar un período posterior al utilizado para el ajuste y comparar predicciones con valores de referencia.
-Análisis espacial: discutir la representatividad de los datos y, si es posible, contrastar con estaciones próximas.
-Comunicación: presentar ecuaciones, métricas, gráficas, limitaciones y conclusiones.
-📐 Fundamento matemático
-Como punto de partida, se plantea una regresión lineal múltiple ajustada por mínimos cuadrados. Para un horizonte `h` de 1, 3 o 5 horas:
-[
-\widehat{T}{t+h}=\beta{0,h}+\beta_{1,h}x_{1,t}+\beta_{2,h}x_{2,t}+\cdots+\beta_{p,h}x_{p,t}
-]
+
+## 📑 Contenido
+
+1. [Descripción del proyecto](#1--descripción-del-proyecto)
+2. [Justificación de la investigación](#2--justificación-de-la-investigación)
+3. [Objetivos](#3--objetivos)
+4. [Área de estudio y delimitación geográfica](#4--área-de-estudio-y-delimitación-geográfica)
+5. [Fuentes de datos](#5--fuentes-de-datos)
+6. [Variables meteorológicas](#6--variables-meteorológicas)
+7. [Metodología](#7--metodología)
+8. [Fundamento matemático](#8--fundamento-matemático)
+9. [Evaluación del modelo](#9--evaluación-del-modelo)
+10. [Tecnologías utilizadas](#10--tecnologías-utilizadas)
+11. [Resultados esperados](#11--resultados-esperados)
+12. [Limitaciones](#12--limitaciones)
+13. [Integrantes](#13--integrantes)
+14. [Referencias bibliográficas](#14--referencias-bibliográficas)
+
+---
+
+## 1. 📌 Descripción del proyecto
+
+El presente proyecto tiene como finalidad desarrollar un modelo matemático que permita estimar la temperatura del aire a corto plazo en el sector del Parque Bicentenario, ubicado en la parroquia La Concepción, al norte de Quito, Ecuador.
+
+Para realizar este análisis se utilizará información meteorológica horaria correspondiente al período 2018–2026, asociada a la estación histórica Mariscal Sucre, registrada en la plataforma Meteostat.
+
+Los registros disponibles incluyen variables como temperatura, humedad relativa, velocidad y dirección del viento, presión atmosférica, nubosidad y precipitación.
+
+Para complementar los registros faltantes, el equipo utiliza información procedente de ERA5 y ECMWF IFS, obtenida mediante Open-Meteo.
+
+La técnica principal será el método de mínimos cuadrados, con el objetivo de construir funciones matemáticas capaces de estimar la temperatura del aire para los siguientes horizontes:
+
+- Predicción a 1 hora.
+- Predicción a 3 horas.
+- Predicción a 5 horas.
+
+El proyecto se enfoca en una ubicación meteorológica específica del norte de Quito y no busca desarrollar un pronóstico general para toda la ciudad.
+
+---
+
+## 2. 💡 Justificación de la investigación
+
+### ¿Por qué es un buen tema para Métodos Numéricos?
+
+La predicción de temperatura mediante métodos numéricos permite aplicar conceptos matemáticos a un problema real, utilizando información meteorológica histórica para analizar patrones y estimar valores futuros.
+
+El método de mínimos cuadrados permite encontrar una función matemática que se ajuste a los datos disponibles y evaluar posteriormente su capacidad de predicción.
+
+Este proyecto resulta importante porque permite relacionar la programación, el análisis de datos y los métodos numéricos con un fenómeno cotidiano como la variación de la temperatura.
+
+### ¿Por qué se seleccionó el sector de La Concepción?
+
+La parroquia La Concepción se encuentra en el norte de Quito y contiene el Parque Bicentenario, construido sobre los terrenos del antiguo aeropuerto Mariscal Sucre.
+
+Se considera una zona adecuada para desarrollar la investigación por las siguientes razones:
+
+**1. Relación con la información meteorológica**
+
+El proyecto utiliza datos asociados a la estación histórica Quito / Mariscal Sucre, cuya ubicación de referencia se encuentra en este sector.
+
+Esta relación permite establecer un punto geográfico de referencia para el análisis de temperatura.
+
+Sin embargo, la existencia de registros recientes en una plataforma no confirma que actualmente funcione un sensor físico en el antiguo aeropuerto.
+
+**2. Características geográficas**
+
+El Parque Bicentenario presenta un terreno predominantemente plano en su área central.
+
+En sus alrededores existen sectores residenciales, vías de circulación, edificaciones y áreas verdes.
+
+Estas características hacen que el sector sea interesante para estudiar el comportamiento de la temperatura del aire.
+
+**3. Diferencias de cobertura del suelo**
+
+Las áreas vegetadas y las superficies urbanizadas pueden presentar comportamientos térmicos diferentes.
+
+La vegetación, los materiales de construcción y la presencia de superficies asfaltadas influyen en el intercambio de energía con la atmósfera.
+
+Por este motivo, resulta relevante investigar si los datos de una estación meteorológica pueden representar las condiciones de ubicaciones próximas.
+
+**4. Importancia de la delimitación geográfica**
+
+El proyecto permite estudiar no solamente la predicción de temperatura, sino también las limitaciones espaciales de los datos utilizados.
+
+No sería correcto afirmar que una estación meteorológica representa toda la parroquia únicamente por encontrarse dentro de ella.
+
+Es necesario evaluar las características geográficas y, cuando sea posible, comparar observaciones de estaciones próximas.
+
+### Conclusión de la justificación
+
+La Concepción es una zona pertinente para investigar debido a su relación con los datos históricos del antiguo aeropuerto y a la diversidad de características urbanas y ambientales existentes en sus alrededores.
+
+No obstante, la cobertura geográfica de las predicciones deberá justificarse mediante evidencia y no únicamente por la cercanía con la estación de referencia.
+
+---
+
+## 3. 🎯 Objetivos
+
+### Objetivo general
+
+Desarrollar un modelo matemático mediante mínimos cuadrados para estimar la temperatura del aire a 1, 3 y 5 horas en el sector de referencia del Parque Bicentenario, al norte de Quito.
+
+### Objetivos específicos
+
+- Recopilar y organizar datos meteorológicos horarios del período 2018–2026.
+- Revisar y completar los registros faltantes mediante fuentes meteorológicas complementarias.
+- Analizar las variables relacionadas con el comportamiento de la temperatura.
+- Construir funciones matemáticas mediante el método de mínimos cuadrados.
+- Calcular predicciones de temperatura a 1, 3 y 5 horas.
+- Evaluar los resultados utilizando medidas de error.
+- Investigar la representatividad espacial de la estación meteorológica.
+- Establecer las limitaciones geográficas del modelo.
+- Presentar resultados mediante tablas y gráficas.
+
+---
+
+## 4. 📍 Área de estudio y delimitación geográfica
+
+### 4.1 Ubicación
+
+El área de investigación corresponde al entorno del Parque Bicentenario, ubicado en la parroquia La Concepción, al norte de Quito, Ecuador.
+
+La referencia meteorológica utilizada corresponde a la estación histórica Quito / Mariscal Sucre.
+
+| Característica | Información |
+|---|---|
+| País | Ecuador |
+| Provincia | Pichincha |
+| Ciudad | Quito |
+| Parroquia | La Concepción |
+| Sector | Parque Bicentenario |
+| Estación histórica | Mariscal Sucre |
+| Código de estación | 84071 |
+| Código ICAO histórico | SEQU |
+| Latitud | -0.1500 |
+| Longitud | -78.4833 |
+| Elevación de referencia | 2811 m s. n. m. |
+| Período de estudio | 2018–2026 |
+
+**Ubicación de referencia:**
+
+[Ver coordenadas en Google Maps](https://www.google.com/maps?q=-0.1500,-78.4833)
+
+### 4.2 Características geográficas
+
+El Parque Bicentenario ocupa parte del antiguo aeropuerto Mariscal Sucre, que dejó de operar como aeropuerto comercial en 2013.
+
+La zona se encuentra dentro del valle urbano de Quito, rodeada de áreas residenciales, comerciales y espacios recreativos.
+
+Entre sus principales características se encuentran:
+
+- Terreno relativamente plano dentro del área principal del parque.
+- Presencia de vegetación y espacios abiertos.
+- Sectores residenciales y comerciales alrededor del parque.
+- Calles y avenidas con superficies asfaltadas.
+- Variaciones de relieve hacia las laderas occidentales.
+
+Estas características deben considerarse al estudiar la temperatura del aire porque pueden producir diferencias entre ubicaciones cercanas.
+
+### 4.3 Límites geográficos del área de investigación
+
+Para el desarrollo inicial se propone utilizar como referencia el Parque Bicentenario y estudiar sectores próximos de la parroquia La Concepción.
+
+Se deben diferenciar tres niveles:
+
+| Zona | Interpretación |
+|---|---|
+| Ubicación meteorológica de referencia | Punto asociado a los datos históricos de Meteostat |
+| Zona propuesta para investigar | Parque Bicentenario y sectores próximos de La Concepción |
+| Zona validada para predicción | Pendiente de determinar mediante evidencia meteorológica |
+
+Los límites administrativos de La Concepción no deben considerarse automáticamente límites de cobertura meteorológica.
+
+### 4.4 Sectores cercanos que podrían investigarse
+
+**Parque Bicentenario**
+
+Constituye el sector central de estudio por su relación con la ubicación histórica de referencia.
+
+**La Concepción**
+
+Es el entorno urbano inmediato del parque. Se deben investigar las diferencias entre áreas residenciales, espacios verdes y avenidas.
+
+**La Florida**
+
+Puede considerarse un sector candidato de comparación, siempre que se evalúen las diferencias de elevación y cobertura del suelo.
+
+**Cotocollao**
+
+Es otro sector del norte de Quito que podría estudiarse, pero su proximidad no demuestra equivalencia térmica.
+
+**Atucucho y laderas occidentales**
+
+Estas zonas presentan características topográficas diferentes, por lo que no se deben incluir automáticamente dentro de la cobertura del modelo.
+
+La selección de estos sectores es orientativa y no constituye una validación de representatividad.
+
+### 4.5 Representatividad espacial de la estación
+
+La representatividad espacial indica hasta qué punto las mediciones de una estación meteorológica pueden describir razonablemente las condiciones de otros lugares.
+
+Según la Organización Meteorológica Mundial (OMM), esta representatividad depende del entorno, la exposición de los instrumentos, la variable medida y la finalidad de las observaciones.
+
+Entre los factores importantes se encuentran:
+
+- Distancia horizontal.
+- Diferencias de altitud.
+- Relieve y pendientes.
+- Cobertura vegetal.
+- Presencia de edificios.
+- Superficies asfaltadas.
+- Circulación del viento.
+- Condiciones meteorológicas locales.
+
+No existe un radio universal que permita establecer automáticamente el alcance de una estación de temperatura en cualquier entorno.
+
+### 4.6 Delimitación recomendada
+
+Se propone mantener inicialmente las predicciones asociadas a la ubicación meteorológica de referencia del Parque Bicentenario.
+
+El área circundante de La Concepción se utilizará como zona de investigación para analizar la posible extensión espacial del modelo.
+
+No se establecerá un radio fijo de cobertura hasta disponer de información suficiente que permita justificarlo.
+
+Si no se obtienen mediciones independientes en otros puntos, el alcance del modelo permanecerá limitado a su ubicación meteorológica de referencia.
+
+---
+
+## 5. 🗂️ Fuentes de datos
+
+### 5.1 Meteostat
+
+Meteostat es una plataforma que permite consultar registros meteorológicos históricos.
+
+Para este proyecto se utiliza una serie asociada a la estación histórica Quito / Mariscal Sucre.
+
+**Estación:** 84071
+
+**Coordenadas de referencia:** -0.1500, -78.4833
+
+**Fuente:**
+
+https://meteostat.net/es/station/84071
+
+Es importante comprobar la procedencia de los registros, especialmente después del cierre del antiguo aeropuerto.
+
+No debe asumirse que todos los valores recientes proceden directamente de un sensor ubicado en ese lugar.
+
+### 5.2 Open-Meteo
+
+Open-Meteo proporciona acceso a información meteorológica histórica y productos de modelos atmosféricos.
+
+Se utiliza para complementar registros faltantes mediante ERA5 y ECMWF IFS.
+
+**Fuente:**
+
+https://open-meteo.com/en/docs/historical-weather-api
+
+### 5.3 ERA5
+
+ERA5 es un producto de reanálisis atmosférico desarrollado por el Centro Europeo de Previsiones Meteorológicas a Medio Plazo (ECMWF).
+
+Integra observaciones y modelos atmosféricos para generar información meteorológica histórica.
+
+La resolución espacial nominal de ERA5 es de aproximadamente 0,25 grados, equivalente a unos 25 km.
+
+Esta resolución no significa que los datos representen con igual precisión cada ubicación dentro de un radio de 25 km.
+
+### 5.4 ECMWF IFS
+
+IFS es el sistema de predicción meteorológica del ECMWF.
+
+El producto histórico IFS utilizado mediante Open-Meteo puede ofrecer una resolución aproximada de 9 km, dependiendo de la versión y el período disponible.
+
+Su resolución espacial debe diferenciarse de la precisión local de una predicción.
+
+### 5.5 Comparación de fuentes
+
+| Fuente | Tipo de información | Uso en el proyecto |
+|---|---|---|
+| Meteostat | Registros meteorológicos históricos | Serie principal de referencia |
+| ERA5 | Reanálisis atmosférico | Complementación de registros |
+| ECMWF IFS | Modelo atmosférico | Complementación de registros |
+| Open-Meteo | Plataforma de consulta | Acceso a productos meteorológicos |
+
+Los valores completados mediante modelos atmosféricos deben identificarse y no presentarse como mediciones directas.
+
+---
+
+## 6. 🌡️ Variables meteorológicas
+
+El conjunto de datos contempla las siguientes variables:
+
+| Variable | Descripción |
+|---|---|
+| Temperatura | Temperatura del aire |
+| Humedad relativa | Cantidad relativa de vapor de agua |
+| Velocidad del viento | Rapidez de desplazamiento del aire |
+| Dirección del viento | Dirección desde la que sopla |
+| Presión atmosférica | Presión ejercida por la atmósfera |
+| Nubosidad | Cobertura de nubes |
+| Precipitación | Cantidad de precipitación registrada |
+| Fecha y hora | Momento de cada observación |
+
+La temperatura del aire será la variable principal que el modelo buscará estimar.
+
+Las demás variables podrán utilizarse como variables explicativas según su disponibilidad y el análisis realizado por el equipo.
+
+---
+
+## 7. 🔎 Metodología
+
+El desarrollo del proyecto se plantea en las siguientes etapas.
+
+### Etapa 1. Recolección de información
+
+Obtener los registros meteorológicos correspondientes al período de estudio.
+
+### Etapa 2. Limpieza de datos
+
+Identificar:
+
+- Valores faltantes.
+- Registros duplicados.
+- Inconsistencias.
+- Diferencias de unidades.
+- Problemas de fecha y hora.
+
+### Etapa 3. Complementación de registros
+
+Completar los datos faltantes utilizando los productos meteorológicos seleccionados.
+
+Se conservará la identificación de la fuente utilizada para cada valor.
+
+### Etapa 4. Preparación de variables
+
+Seleccionar las variables meteorológicas que se utilizarán para construir las funciones matemáticas.
+
+### Etapa 5. Aplicación de mínimos cuadrados
+
+Calcular los coeficientes necesarios para ajustar las funciones de predicción.
+
+### Etapa 6. Predicción de temperatura
+
+Estimar la temperatura del aire a:
+
+- 1 hora.
+- 3 horas.
+- 5 horas.
+
+### Etapa 7. Evaluación
+
+Comparar los valores estimados con los valores de referencia mediante métricas de error.
+
+### Etapa 8. Interpretación
+
+Analizar los resultados y explicar las limitaciones del modelo.
+
+---
+
+## 8. 📐 Fundamento matemático
+
+El método principal utilizado será el ajuste por mínimos cuadrados.
+
+Este método permite encontrar los coeficientes de una función matemática que minimice la suma de los cuadrados de los errores entre los valores observados y los valores estimados.
+
+### 8.1 Modelo propuesto
+
+Se plantea utilizar una función de regresión lineal múltiple:
+
+\[
+\widehat{T}_{t+h} =
+\beta_{0,h}+
+\beta_{1,h}x_{1,t}+
+\beta_{2,h}x_{2,t}+
+\cdots+
+\beta_{p,h}x_{p,t}
+\]
+
 Donde:
-`T̂(t+h)` es la temperatura del aire estimada `h` horas después.
-`x(j,t)` son variables conocidas en el instante `t`.
-`β(j,h)` son los coeficientes que se deben estimar para cada horizonte.
-Los coeficientes se elegirán minimizando la suma de errores cuadrados:
-[
-\min_{\boldsymbol{\beta}h}\sum{i=1}^{n}\left(T_{i+h}-\widehat{T}_{i+h}\right)^2
-]
-En notación matricial, cuando se cumplen las condiciones para su utilización:
-[
-\widehat{\boldsymbol{\beta}}_h=(X^\mathsf{T}X)^{-1}X^\mathsf{T}y_h
-]
-En el código se preferirá un procedimiento numéricamente estable (por ejemplo, factorización QR o una rutina de mínimos cuadrados) en lugar de calcular explícitamente la inversa de `XᵀX`.
-> Esta es la **formulación propuesta**, no una ecuación ajustada con coeficientes ya obtenidos. La selección final de variables y los resultados se incorporarán cuando esté disponible la implementación del equipo.
-📊 Evaluación del modelo y representatividad
-Calidad de la predicción temporal
-Para cada horizonte (1, 3 y 5 horas) se calcularán, al menos, las siguientes métricas entre el dato de referencia `Tᵢ` y el valor estimado `T̂ᵢ`:
-Error absoluto medio (MAE)
-[
-MAE=\frac{1}{n}\sum_{i=1}^{n}|T_i-\widehat{T}_i|
-]
-Raíz del error cuadrático medio (RMSE)
-[
-RMSE=\sqrt{\frac{1}{n}\sum_{i=1}^{n}(T_i-\widehat{T}_i)^2}
-]
-Sesgo (predicción menos referencia)
-[
-Sesgo=\frac{1}{n}\sum_{i=1}^{n}(\widehat{T}_i-T_i)
-]
-Para reducir el riesgo de fuga de información, la evaluación debe respetar el orden temporal de los datos. También se debe registrar si los valores usados como referencia proceden de mediciones directas o de productos modelados.
-Comprobación espacial sencilla (si se consiguen datos)
-Comparar temperaturas observadas a la misma hora en la estación de referencia y en una estación cercana, calculando MAE, RMSE y sesgo de las diferencias entre estaciones. Esta comparación no es lo mismo que evaluar los errores de predicción del modelo.
-No se adoptará un umbral universal arbitrario de aceptación. Se reportarán la magnitud de las diferencias, la cantidad de horas comparadas, las condiciones de cada estación y las limitaciones de cobertura. Una comparación con pocas estaciones tampoco valida automáticamente una parroquia completa.
-💻 Tecnologías y ejecución
-Herramientas previstas: Python y Jupyter Notebook. Las bibliotecas, versiones y dependencias se especificarán cuando el equipo suba el código.
-Estado del repositorio
-Este README documenta el planteamiento y la metodología del proyecto. La estructura definitiva de archivos y los comandos para ejecutar el análisis aún no están publicados.
-Una vez incorporados los archivos, esta sección incluirá:
-Estructura real de las carpetas.
-Requisitos de software y dependencias.
-Procedimiento para obtener o localizar el dataset.
-Comandos o pasos para ejecutar el notebook o programa.
-Archivos de salida y forma de reproducir las métricas y gráficas.
-No se incluyen comandos ficticios para archivos que todavía no existen.
-📈 Resultados
-Pendientes de implementación y verificación. Aquí se incorporarán:
-Ecuaciones finales y coeficientes estimados.
-Cantidad de registros originales, faltantes y completados.
-Comparación de valores reales y estimados para 1, 3 y 5 horas.
-Métricas de error para cada horizonte.
-Gráficas de la serie, predicciones y residuos.
-Evidencia disponible para la delimitación geográfica.
-⚠️ Limitaciones
-No se ha demostrado que la estación histórica siga operando físicamente en las coordenadas indicadas.
-Es necesario comprobar la procedencia y homogeneidad de la serie 2018–2026.
-ERA5 e IFS son productos de modelación atmosférica, no sustitutos exactos de mediciones locales.
-La vegetación, el relieve y la urbanización pueden causar diferencias térmicas entre puntos cercanos.
-No existe actualmente un radio de representatividad espacial validado para este proyecto.
-La predicción se refiere a la temperatura del aire y no debe confundirse con mapas satelitales de temperatura superficial.
-El modelo de mínimos cuadrados será una aproximación matemática cuya utilidad debe comprobarse con datos separados de los utilizados para ajustarlo.
-👥 Equipo
-Escuela Politécnica Nacional — Asignatura Métodos Numéricos
-Los integrantes y sus responsabilidades se incorporarán una vez confirmados por el grupo.
-📚 Referencias
-Organización Meteorológica Mundial (OMM/WMO). (2023). Guide to Instruments and Methods of Observation, WMO-No. 8, Vol. I. Apartado 1.1.2: Representativeness. Consultar guía.
-Meteostat. Quito / Mariscal Sucre (84071): ficha de estación e inventario. Ficha oficial de la plataforma.
-Open-Meteo. Historical Weather API: ERA5 y ECMWF IFS. Documentación técnica.
-Empresa Pública Metropolitana de Movilidad y Obras Públicas (EPMMOP). Parque Bicentenario. Descripción municipal.
-EPMMOP. (2025). Memoria de cálculo — Diseño de áreas de biorretención en el marco del proyecto de repotenciación integral del Parque Bicentenario. Documento técnico.
-Cubillo, P., Orellana, D. y Maigua, P. (2020). Análisis de la distribución espacial de la temperatura superficial y la valoración de criterios que influyen en la isla de calor urbano (ICU) en el Distrito Metropolitano de Quito. Centro de Información Urbana de Quito (CIUQ). Informe.
-Municipio del Distrito Metropolitano de Quito. (2020). Proyecto delimitación de barrios, parroquias urbanas y rurales: Administración Zonal Eugenio Espejo. Informe técnico.
+
+- T̂ representa la temperatura estimada.
+- h representa el horizonte de predicción.
+- x representa las variables explicativas.
+- β representa los coeficientes del modelo.
+
+Los horizontes considerados serán:
+
+\[
+h \in \{1,3,5\}
+\]
+
+### 8.2 Función de mínimos cuadrados
+
+Los coeficientes se determinan minimizando:
+
+\[
+\min_{\beta}
+\sum_{i=1}^{n}
+(T_i-\widehat{T}_i)^2
+\]
+
+En notación matricial, bajo las condiciones matemáticas correspondientes:
+
+\[
+\widehat{\beta} =
+(X^TX)^{-1}X^Ty
+\]
+
+Para la implementación se recomienda utilizar procedimientos numéricamente estables, evitando calcular directamente la inversa cuando no sea necesario.
+
+Los coeficientes finales dependerán de los datos procesados y de las variables seleccionadas.
+
 ---
-Nota académica: el documento distingue los datos de referencia, los productos atmosféricos de apoyo y el área geográfica cuya representatividad queda por comprobar. La documentación se actualizará junto con el código y los resultados del equipo.
+
+## 9. 📊 Evaluación del modelo
+
+Para evaluar las predicciones se propone utilizar las siguientes métricas.
+
+### 9.1 Error absoluto medio (MAE)
+
+\[
+MAE =
+\frac{1}{n}
+\sum_{i=1}^{n}
+|T_i-\widehat{T}_i|
+\]
+
+Permite calcular el promedio de los errores absolutos.
+
+### 9.2 Raíz del error cuadrático medio (RMSE)
+
+\[
+RMSE =
+\sqrt{
+\frac{1}{n}
+\sum_{i=1}^{n}
+(T_i-\widehat{T}_i)^2
+}
+\]
+
+Permite evaluar la magnitud de los errores, dando mayor importancia a las diferencias grandes.
+
+### 9.3 Sesgo
+
+\[
+Sesgo =
+\frac{1}{n}
+\sum_{i=1}^{n}
+(\widehat{T}_i-T_i)
+\]
+
+Permite identificar si el modelo tiende a sobreestimar o subestimar la temperatura.
+
+### 9.4 Validación temporal
+
+Los datos destinados a evaluar el modelo deben corresponder a un período posterior al utilizado para el ajuste.
+
+Esto permite analizar su comportamiento con información que no fue utilizada para calcular los coeficientes.
+
+### 9.5 Validación espacial
+
+Para comprobar la representatividad espacial se propone comparar observaciones horarias de estaciones meteorológicas cercanas, cuando existan datos disponibles.
+
+La comparación deberá realizarse utilizando mediciones correspondientes a las mismas fechas y horas.
+
+Se podrán calcular:
+
+- MAE entre estaciones.
+- RMSE entre estaciones.
+- Sesgo de temperatura entre estaciones.
+
+Esta evaluación permitirá cuantificar diferencias térmicas entre ubicaciones.
+
+No se establecerá un umbral universal de aceptación sin una justificación científica.
+
+La comparación entre estaciones no debe confundirse con la evaluación de los errores de predicción del modelo.
+
+---
+
+## 10. 💻 Tecnologías utilizadas
+
+### Herramientas previstas
+
+- Python.
+- Jupyter Notebook.
+- GitHub.
+
+Las bibliotecas y dependencias definitivas se incorporarán conforme avance la implementación.
+
+### Estado del repositorio
+
+El repositorio se encuentra en desarrollo.
+
+Las instrucciones de instalación, estructura de carpetas y ejecución se documentarán una vez incorporados los programas y archivos correspondientes.
+
+**Repositorio:**
+
+https://github.com/infismal/AnalisisMeteorologico
+
+---
+
+## 11. 📈 Resultados esperados
+
+Se espera obtener:
+
+- Una serie meteorológica organizada y depurada.
+- Funciones matemáticas ajustadas mediante mínimos cuadrados.
+- Predicciones de temperatura a 1, 3 y 5 horas.
+- Tablas comparativas de valores observados y estimados.
+- Gráficas de temperatura.
+- Métricas de evaluación del modelo.
+- Un análisis de las limitaciones geográficas de las predicciones.
+
+Los resultados numéricos se incorporarán después de ejecutar y verificar el modelo.
+
+---
+
+## 12. ⚠️ Limitaciones
+
+El proyecto considera las siguientes limitaciones:
+
+1. No se ha confirmado la operación actual de un sensor meteorológico en el antiguo aeropuerto Mariscal Sucre.
+
+2. Se debe verificar la procedencia de los datos disponibles para el período 2018–2026.
+
+3. Los registros obtenidos mediante ERA5 y ECMWF IFS no equivalen necesariamente a observaciones locales directas.
+
+4. La topografía y la urbanización de Quito pueden generar diferencias de temperatura entre ubicaciones próximas.
+
+5. No existe todavía un radio de representatividad espacial validado para los datos del proyecto.
+
+6. Los resultados del modelo no deben interpretarse como predicciones válidas para toda la ciudad de Quito.
+
+7. La precisión del modelo deberá evaluarse mediante datos diferentes de los utilizados durante su ajuste.
+
+---
+
+## 13. 👥 Integrantes
+
+**Escuela Politécnica Nacional**
+
+**Asignatura:** Métodos Numéricos
+
+**Equipo de trabajo:** Pendiente de completar con los integrantes y responsabilidades confirmados por el grupo.
+
+---
+
+## 14. 📚 Referencias bibliográficas
+
+### Organización Meteorológica Mundial
+
+World Meteorological Organization. (2023).
+
+*Guide to Instruments and Methods of Observation (WMO-No. 8).*
+
+https://wmo.int/guide-instruments-and-methods-of-observation-wmo-no-8
+
+### Meteostat
+
+Meteostat. *Quito / Mariscal Sucre — Station 84071.*
+
+https://meteostat.net/es/station/84071
+
+### Open-Meteo
+
+Open-Meteo. *Historical Weather API Documentation.*
+
+https://open-meteo.com/en/docs/historical-weather-api
+
+### ECMWF
+
+European Centre for Medium-Range Weather Forecasts.
+
+*ERA5: Data documentation.*
+
+https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5
+
+### Municipio de Quito
+
+Empresa Pública Metropolitana de Movilidad y Obras Públicas.
+
+*Parque Bicentenario.*
+
+https://epmmop.quito.gob.ec/parque-bicentenario/
+
+### Investigación sobre temperatura urbana de Quito
+
+Cubillo, P., Orellana, D. y Maigua, P. (2020).
+
+*Análisis de la distribución espacial de la temperatura superficial y la valoración de criterios que influyen en la isla de calor urbano en el Distrito Metropolitano de Quito.*
+
+Centro de Información Urbana de Quito.
+
+https://www.ciuq.ec/Engl2/INFORME%20FINAL%20ISLAS%20DE%20CALOR.pdf
+
+---
+
+## 📝 Nota académica
+
+Este repositorio corresponde a un proyecto universitario en desarrollo.
+
+La metodología y los resultados serán actualizados conforme avance la implementación del modelo matemático y se verifique la información meteorológica disponible.
+
+La delimitación geográfica propuesta constituye un área de investigación y no representa una cobertura meteorológica validada.
+
+**Escuela Politécnica Nacional — Métodos Numéricos — 2026**
