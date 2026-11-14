@@ -1,8 +1,6 @@
 
 # 🌤️ Modelado matemático para la predicción de temperatura del aire a corto plazo en el sector del Parque Bicentenario, Quito
 
-**Proyecto universitario — Métodos Numéricos**
-
 **Escuela Politécnica Nacional (EPN)**  
 **Facultad de Ingeniería de Sistemas**
 
@@ -609,14 +607,6 @@ Centro de Información Urbana de Quito.
 
 https://www.ciuq.ec/Engl2/INFORME%20FINAL%20ISLAS%20DE%20CALOR.pdf
 
----
 
-## 📝 Nota académica
-
-Este repositorio corresponde a un proyecto universitario en desarrollo.
-
-La metodología y los resultados serán actualizados conforme avance la implementación del modelo matemático y se verifique la información meteorológica disponible.
-
-La delimitación geográfica propuesta constituye un área de investigación y no representa una cobertura meteorológica validada.
 
 **Escuela Politécnica Nacional — Métodos Numéricos — 2026**
