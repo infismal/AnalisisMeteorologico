@@ -388,28 +388,24 @@ $$
 
 Para cada horizonte se estiman los coeficientes minimizando:
 
-$$
-\widehat{\boldsymbol{\beta}}_h
-=
-\underset{\boldsymbol{\beta}_h}{\operatorname{arg\,min}}
-\sum_{i=1}^{n_h}
-\left(
-T_{t_i+h}-\widehat{T}_{t_i+h}
-\right)^2
-$$
+
+```math
+\hat{T}_{t+h} = \beta_{0,h} + \sum_{j=1}^{p} \beta_{j,h} x_{j,t}
+```
+
 
 ### 6.2 Formulación matricial
 
 El problema de mínimos cuadrados se expresa como:
 
-$$
-\widehat{\boldsymbol{\beta}}_h
-=
-\underset{\boldsymbol{\beta}_h}{\operatorname{arg\,min}}
-\left\|
-X_h\boldsymbol{\beta}_h-y_h
-\right\|_2^2
-$$
+
+```math
+\hat{\beta}_h =
+\arg\min_{\beta_h}
+\left\|X_h\beta_h-y_h\right\|_2^2
+```
+
+
 
 Donde:
 
